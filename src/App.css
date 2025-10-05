@@ -1,0 +1,38 @@
+html {
+  background-color: #121212;
+  color: white;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+}
+
+tr[draggable] {
+  cursor: move;
+}
+
+tr[draggable]:hover {
+  background-color: #2a2a2a;
+}
+
+input, select {
+  font-family: inherit;
+}
+
+td[data-clickable] {
+  cursor: pointer;
+}
+
+td[data-clickable]:hover {
+  background-color: #2a2a2a;
+}
