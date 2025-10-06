@@ -29,13 +29,20 @@ export const classColors: Record<WowClass, string> = {
   'Warrior': '#C69B6D',
 };
 
-export interface RaidMember {
+export interface Player {
   id: string;
   name: string;
   class: WowClass;
+}
+
+export interface RaidMember {
+  id: string; // This is the Player's ID
   status: 'present' | 'absent' | 'missing';
   order: number;
 }
+
+// A combination of Player and RaidMember for display purposes
+export interface EnrichedRaidMember extends Player, Omit<RaidMember, 'id'> {}
 
 export interface RaidTable {
   id: string;

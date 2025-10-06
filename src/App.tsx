@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import './App.css'
-import { AddMemberDialog } from './components/AddMemberDialog'
-import { RaidMemberTable } from './components/RaidMemberTable'
-import type { RaidMember, RaidTable, WowClass } from './types/wowTypes'
+import { useMemo, useState } from 'react';
+import './App.css';
+import { AddMemberDialog } from './components/AddMemberDialog';
+import { RaidMemberTable } from './components/RaidMemberTable';
+import type { EnrichedRaidMember, Player, RaidMember, RaidTable, WowClass } from './types/wowTypes';
 
 function App() {
+  const [players, setPlayers] = useState<Player[]>([]);
   const [tables, setTables] = useState<RaidTable[]>([
     {
       id: '1',
@@ -21,20 +22,58 @@ function App() {
   const activeTable = tables.find(table => table.id === activeTableId);
 
   const handleAddMember = (name: string, playerClass: WowClass) => {
-    setTables(tables.map(table => {
-      if (table.id === activeTableId) {
-        const newMember: RaidMember = {
-          id: Math.random().toString(36).substr(2, 9),
-          name,
-          class: playerClass,
-          status: 'present',
-          order: table.members.length + 1
-        };
-        return { ...table, members: [...table.members, newMember] };
-      }
-      return table;
+    const existingPlayer = players.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (existingPlayer) {
+      // If player already exists, don't add again.
+      // Optionally, you could add them to the current table if they aren't already in it.
+      alert('A player with this name already exists.');
+      return;
+    }
+
+    const newPlayer: Player = {
+      id: Math.random().toString(36).substr(2, 9),
+      name,
+      class: playerClass,
+    };
+    setPlayers([...players, newPlayer]);
+
+    // Add the new player to all existing tables
+    setTables(currentTables => currentTables.map(table => {
+      const newMember: RaidMember = {
+        id: newPlayer.id,
+        status: 'present',
+        order: table.members.length + 1
+      };
+      return { ...table, members: [...table.members, newMember] };
     }));
   };
+
+  const handleDeleteMember = (playerId: string) => {
+    // Remove the player from the global list
+    setPlayers(players.filter(p => p.id !== playerId));
+
+    // Remove the player from all tables
+    setTables(tables.map(table => ({
+      ...table,
+      members: table.members.filter(m => m.id !== playerId)
+    })));
+  };
+
+  const membersForActiveTable = useMemo((): EnrichedRaidMember[] => {
+    if (!activeTable) return [];
+    
+    const enrichedMembers = activeTable.members.map(member => {
+      const playerInfo = players.find(p => p.id === member.id);
+      if (!playerInfo) return null; // Should not happen in normal operation
+      return {
+        ...member,
+        name: playerInfo.name,
+        class: playerInfo.class,
+      };
+    }).filter((m): m is EnrichedRaidMember => m !== null);
+
+    return enrichedMembers.sort((a, b) => a.order - b.order);
+  }, [activeTable, players]);
 
   return (
     <div style={styles.container}>
@@ -58,9 +97,13 @@ function App() {
                       style={styles.removeButton}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setTables(tables.filter(t => t.id !== table.id));
-                        if (activeTableId === table.id) {
-                          setActiveTableId(tables[0].id);
+                        const newTables = tables.filter(t => t.id !== table.id);
+                        setTables(newTables);
+                        if (activeTableId === table.id && newTables.length > 0) {
+                          setActiveTableId(newTables[0].id);
+                        } else if (newTables.length === 0) {
+                          // Optional: handle the case where no tables are left
+                          // For example, create a default one or show a message.
                         }
                       }}
                     >
@@ -87,14 +130,24 @@ function App() {
                 Add Member
               </button>
               <RaidMemberTable
-                members={activeTable.members}
-                onUpdateMembers={(members) => {
-                  setTables(tables.map(table => 
-                    table.id === activeTableId 
-                      ? { ...table, members } 
-                      : table
-                  ));
+                members={membersForActiveTable}
+                onUpdateMembers={(updatedMembers) => {
+                  const newTables = tables.map(table => {
+                    if (table.id === activeTableId) {
+                      // When updating, we only receive EnrichedRaidMember, 
+                      // so we need to strip it back to RaidMember for storage.
+                      const updatedPlainMembers: RaidMember[] = updatedMembers.map(m => ({
+                        id: m.id,
+                        order: m.order,
+                        status: m.status,
+                      }));
+                      return { ...table, members: updatedPlainMembers };
+                    }
+                    return table;
+                  });
+                  setTables(newTables);
                 }}
+                onDeleteMember={handleDeleteMember}
               />
             </>
           )}
@@ -111,7 +164,27 @@ function App() {
         <div style={styles.overlay}>
           <div style={styles.dialog}>
             <h2 style={styles.dialogTitle}>Add New Table</h2>
-            <div style={styles.dialogContent}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (newTableName.trim()) {
+                  const newTable: RaidTable = {
+                    id: Math.random().toString(36).substr(2, 9),
+                    name: newTableName.trim(),
+                    // When creating a new table, populate it with all existing players
+                    members: players.map((player, index) => ({
+                      id: player.id,
+                      status: 'present',
+                      order: index + 1,
+                    })),
+                  };
+                  setTables([...tables, newTable]);
+                  setActiveTableId(newTable.id);
+                  setNewTableName('');
+                  setIsAddingTable(false);
+                }
+              }}
+            >
               <input
                 style={styles.input}
                 type="text"
@@ -120,31 +193,22 @@ function App() {
                 onChange={(e) => setNewTableName(e.target.value)}
                 autoFocus
               />
-            </div>
-            <div style={styles.dialogActions}>
-              <button
-                style={styles.cancelButton}
-                onClick={() => setIsAddingTable(false)}
-              >
-                Cancel
-              </button>
-              <button
-                style={styles.submitButton}
-                onClick={() => {
-                  if (newTableName.trim()) {
-                    setTables([...tables, {
-                      id: Math.random().toString(36).substr(2, 9),
-                      name: newTableName.trim(),
-                      members: []
-                    }]);
-                    setNewTableName('');
-                    setIsAddingTable(false);
-                  }
-                }}
-              >
-                Add
-              </button>
-            </div>
+              <div style={styles.dialogActions}>
+                <button
+                  style={styles.cancelButton}
+                  type="button"
+                  onClick={() => setIsAddingTable(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  style={styles.submitButton}
+                  type="submit"
+                >
+                  Add
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
