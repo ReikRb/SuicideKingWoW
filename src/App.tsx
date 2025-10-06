@@ -230,7 +230,7 @@ function App() {
                   onClick={() => setActiveTableId(table.id)}
                 >
                   <span>{table.name}</span>
-                  {tables.length > 1 && (
+                  {tables.length > 0 && (
                     <button
                       className="remove-button"
                       onClick={(e) => {
@@ -245,29 +245,29 @@ function App() {
                   )}
                 </button>
               ))}
+              {isAddingTable ? (
+                <div className="add-table-form">
+                  <input
+                    type="text"
+                    className="add-table-input"
+                    placeholder="Table Name"
+                    value={newTableName}
+                    onChange={(e) => setNewTableName(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleAddTable(newTableName)}
+                    autoFocus
+                  />
+                  <button className="add-table-confirm" onClick={() => handleAddTable(newTableName)}>✓</button>
+                  <button className="add-table-cancel" onClick={() => setIsAddingTable(false)}>✕</button>
+                </div>
+              ) : (
+                <button
+                  className="tab add-new-tab-button"
+                  onClick={() => setIsAddingTable(true)}
+                >
+                  +
+                </button>
+              )}
             </div>
-            {isAddingTable ? (
-              <div className="add-table-form">
-                <input
-                  type="text"
-                  className="add-table-input"
-                  placeholder="Table Name"
-                  value={newTableName}
-                  onChange={(e) => setNewTableName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleAddTable(newTableName)}
-                  autoFocus
-                />
-                <button className="add-table-confirm" onClick={() => handleAddTable(newTableName)}>✓</button>
-                <button className="add-table-cancel" onClick={() => setIsAddingTable(false)}>✕</button>
-              </div>
-            ) : (
-              <button
-                className="add-table-button"
-                onClick={() => setIsAddingTable(true)}
-              >
-                + Add Table
-              </button>
-            )}
           </div>
 
           {activeTable && (

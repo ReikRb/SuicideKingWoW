@@ -74,16 +74,16 @@ td[data-clickable]:hover {
 .tab-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch; /* Changed from 'center' to 'stretch' */
   margin-bottom: 20px;
   border-bottom: 3px solid #3b2f1f;
-  padding-bottom: 15px;
 }
 
 .tab-container {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  flex-grow: 1; /* Allow tab container to grow */
 }
 
 .tab {
@@ -108,10 +108,12 @@ td[data-clickable]:hover {
 }
 
 .tab.active {
-  background-color: #3b2f1f;
+  background-color: rgba(10, 5, 5, 0.75); /* Match card background */
   color: #fff;
-  border-bottom: 1px solid #3b2f1f;
-  transform: translateY(2px);
+  border-color: #4a3c28;
+  border-bottom: 1px solid rgba(10, 5, 5, 0.75); /* Match card background */
+  transform: translateY(3px); /* Move tab down to overlap border */
+  z-index: 1; /* Ensure active tab is on top */
 }
 
 .remove-button {
@@ -127,34 +129,17 @@ td[data-clickable]:hover {
   color: #ff8f8f;
 }
 
-.add-table-button, .add-member-button {
-  font-family: 'Cinzel', serif;
-  font-weight: 600;
-  padding: 10px 15px;
-  background: linear-gradient(to bottom, #8c7853, #6c5833);
-  color: #e6d5b3;
-  border: 2px solid #4a3c28;
-  border-radius: 4px;
-  text-shadow: 1px 1px 2px #000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
-  transition: all 0.2s ease-in-out;
-}
-
-.add-table-button:hover, .add-member-button:hover {
-  background: linear-gradient(to bottom, #a48d64, #8c7853);
-  color: #fff;
-  border-color: #6c5833;
-}
-
-.add-member-button {
-  margin-bottom: 20px;
-  display: inline-block;
+.add-new-tab-button {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 0 15px;
 }
 
 .add-table-form {
   display: flex;
   align-items: center;
   gap: 5px;
+  padding: 0 10px;
 }
 
 .add-table-input {
@@ -189,6 +174,27 @@ td[data-clickable]:hover {
 }
 .add-table-cancel:hover {
   background-color: #a95a5a;
+}
+
+.add-member-button {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  padding: 10px 15px;
+  background: linear-gradient(to bottom, #8c7853, #6c5833);
+  color: #e6d5b3;
+  border: 2px solid #4a3c28;
+  border-radius: 4px;
+  text-shadow: 1px 1px 2px #000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.add-member-button:hover {
+  background: linear-gradient(to bottom, #a48d64, #8c7853);
+  color: #fff;
+  border-color: #6c5833;
 }
 
 .no-tables-message {
@@ -421,4 +427,12 @@ td[data-clickable]:hover {
   background: linear-gradient(to bottom, #a95a5a, #8b3a3a);
   border-color: #6c5833;
   color: #fff;
+}
+
+/* Remove focus outline from tabs and their close buttons */
+.tab:focus,
+.tab:focus-visible,
+.remove-button:focus,
+.remove-button:focus-visible {
+  outline: none;
 }
