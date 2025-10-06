@@ -213,32 +213,31 @@ function App() {
   }, [activeTable, players]);
 
   if (loading) {
-    return <div style={{ color: 'white', textAlign: 'center', paddingTop: '50px' }}>Loading Raid Data...</div>;
+    return <div className="loading-screen">Loading Raid Data...</div>;
   }
 
   return (
-    <div style={styles.container}>
-      <div style={styles.content}>
-        <h1 style={styles.title}>WoW Raid Manager</h1>
-        <div style={styles.card}>
-          <div style={styles.tabHeader}>
-            <div style={styles.tabContainer}>
+    <div className="container">
+      <div className="content">
+        <h1 className="title">Suicide King WoW</h1>
+        <div className="card">
+          <div className="tab-header">
+            <div className="tab-container">
               {tables.map((table) => (
                 <button
                   key={table.id}
-                  style={{
-                    ...styles.tab,
-                    ...(activeTableId === table.id ? styles.activeTab : {})
-                  }}
+                  className={`tab ${activeTableId === table.id ? 'active' : ''}`}
                   onClick={() => setActiveTableId(table.id)}
                 >
                   <span>{table.name}</span>
                   {tables.length > 1 && (
                     <button
-                      style={styles.removeButton}
+                      className="remove-button"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteTable(table.id);
+                        if (window.confirm(`Are you sure you want to delete the table "${table.name}"?`)) {
+                          handleDeleteTable(table.id);
+                        }
                       }}
                     >
                       ✕
@@ -247,21 +246,37 @@ function App() {
                 </button>
               ))}
             </div>
-            <button
-              style={styles.addTableButton}
-              onClick={() => setIsAddingTable(true)}
-            >
-              Add Table
-            </button>
+            {isAddingTable ? (
+              <div className="add-table-form">
+                <input
+                  type="text"
+                  className="add-table-input"
+                  placeholder="Table Name"
+                  value={newTableName}
+                  onChange={(e) => setNewTableName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddTable(newTableName)}
+                  autoFocus
+                />
+                <button className="add-table-confirm" onClick={() => handleAddTable(newTableName)}>✓</button>
+                <button className="add-table-cancel" onClick={() => setIsAddingTable(false)}>✕</button>
+              </div>
+            ) : (
+              <button
+                className="add-table-button"
+                onClick={() => setIsAddingTable(true)}
+              >
+                + Add Table
+              </button>
+            )}
           </div>
 
           {activeTable && (
             <>
               <button
-                style={styles.addMemberButton}
+                className="add-member-button"
                 onClick={() => setIsAddDialogOpen(true)}
               >
-                Add Member
+                + Add Member
               </button>
               <RaidMemberTable
                 members={membersForActiveTable}
@@ -269,6 +284,12 @@ function App() {
                 onDeleteMember={handleDeleteMember}
               />
             </>
+          )}
+          {!activeTable && !loading && (
+            <div className="no-tables-message">
+              <h2>No Raid Tables Found</h2>
+              <p>Click "+ Add Table" to create your first raid list.</p>
+            </div>
           )}
         </div>
       </div>
@@ -278,176 +299,8 @@ function App() {
         onClose={() => setIsAddDialogOpen(false)}
         onAdd={handleAddMember}
       />
-
-      {isAddingTable && (
-        <div style={styles.overlay}>
-          <div style={styles.dialog}>
-            <h2 style={styles.dialogTitle}>Add New Table</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleAddTable(newTableName);
-              }}
-            >
-              <input
-                style={styles.input}
-                type="text"
-                placeholder="Table Name"
-                value={newTableName}
-                onChange={(e) => setNewTableName(e.target.value)}
-                autoFocus
-              />
-              <div style={styles.dialogActions}>
-                <button
-                  style={styles.cancelButton}
-                  type="button"
-                  onClick={() => setIsAddingTable(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  style={styles.submitButton}
-                  type="submit"
-                >
-                  Add
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: '24px',
-    minHeight: '100vh',
-    backgroundColor: '#121212',
-    color: 'white',
-  },
-  content: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-  },
-  title: {
-    marginBottom: '24px',
-    fontSize: '2rem',
-    fontWeight: 'bold',
-  },
-  card: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: '8px',
-    padding: '24px',
-  },
-  tabHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    marginBottom: '24px',
-    borderBottom: '1px solid #333',
-    paddingBottom: '16px',
-  },
-  tabContainer: {
-    display: 'flex',
-    flex: 1,
-    gap: '8px',
-  },
-  tab: {
-    padding: '8px 16px',
-    backgroundColor: 'transparent',
-    border: '1px solid #444',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
-  activeTab: {
-    backgroundColor: '#333',
-    borderColor: '#666',
-  },
-  removeButton: {
-    padding: '4px 8px',
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: '#999',
-    cursor: 'pointer',
-    fontSize: '12px',
-  },
-  addTableButton: {
-    padding: '8px 16px',
-    backgroundColor: '#2196f3',
-    border: 'none',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-    marginLeft: '16px',
-  },
-  addMemberButton: {
-    padding: '8px 16px',
-    backgroundColor: '#4caf50',
-    border: 'none',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-    marginBottom: '16px',
-  },
-  overlay: {
-    position: 'fixed' as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  dialog: {
-    backgroundColor: '#1a1a1a',
-    padding: '24px',
-    borderRadius: '8px',
-    minWidth: '300px',
-  },
-  dialogTitle: {
-    marginTop: 0,
-    marginBottom: '24px',
-    color: 'white',
-  },
-  dialogContent: {
-    marginBottom: '24px',
-  },
-  input: {
-    width: '100%',
-    padding: '8px',
-    backgroundColor: '#2a2a2a',
-    border: '1px solid #444',
-    borderRadius: '4px',
-    color: 'white',
-  },
-  dialogActions: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '12px',
-  },
-  cancelButton: {
-    padding: '8px 16px',
-    backgroundColor: 'transparent',
-    border: '1px solid #666',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-  },
-  submitButton: {
-    padding: '8px 16px',
-    backgroundColor: '#4caf50',
-    border: 'none',
-    borderRadius: '4px',
-    color: 'white',
-    cursor: 'pointer',
-  },
-};
 
 export default App;

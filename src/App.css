@@ -1,20 +1,31 @@
-html {
-  background-color: #121212;
-  color: white;
+/* App.css */
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
 
-#root {
+/* Remove the default button styling to allow for custom themes */
+button {
+  border: none;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
+  cursor: pointer;
 }
 
-button {
-  font-family: inherit;
+button:focus {
+  outline: 1px dotted;
+  outline: -webkit-focus-ring-color auto 5px;
 }
 
 tr[draggable] {
@@ -22,7 +33,7 @@ tr[draggable] {
 }
 
 tr[draggable]:hover {
-  background-color: #2a2a2a;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 input, select {
@@ -34,5 +45,380 @@ td[data-clickable] {
 }
 
 td[data-clickable]:hover {
-  background-color: #2a2a2a;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* WoW Theme Styles */
+.container {
+  padding: 20px;
+}
+
+.title {
+  font-family: 'Cinzel', serif;
+  font-size: 3rem;
+  color: #F0E68C; /* A golden, parchment-like color */
+  text-shadow: 3px 3px 6px #000;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+.card {
+  background-color: rgba(10, 5, 5, 0.75);
+  border: 2px solid #4a3c28;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.8);
+  backdrop-filter: blur(3px);
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #3b2f1f;
+  padding-bottom: 15px;
+}
+
+.tab-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tab {
+  font-family: 'Cinzel', serif;
+  padding: 10px 20px;
+  background-color: #211a11;
+  color: #a89a80;
+  border: 1px solid #4a3c28;
+  border-bottom: none;
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.tab:hover {
+  background-color: #3a2f21;
+  color: #d4c3a3;
+}
+
+.tab.active {
+  background-color: #3b2f1f;
+  color: #fff;
+  border-bottom: 1px solid #3b2f1f;
+  transform: translateY(2px);
+}
+
+.remove-button {
+  color: #8a7a60;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  padding: 0 5px;
+  margin-left: 5px;
+  font-weight: bold;
+}
+.remove-button:hover {
+  color: #ff8f8f;
+}
+
+.add-table-button, .add-member-button {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  padding: 10px 15px;
+  background: linear-gradient(to bottom, #8c7853, #6c5833);
+  color: #e6d5b3;
+  border: 2px solid #4a3c28;
+  border-radius: 4px;
+  text-shadow: 1px 1px 2px #000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+.add-table-button:hover, .add-member-button:hover {
+  background: linear-gradient(to bottom, #a48d64, #8c7853);
+  color: #fff;
+  border-color: #6c5833;
+}
+
+.add-member-button {
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.add-table-form {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.add-table-input {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 2px solid #4a3c28;
+  background-color: #1a150f;
+  color: #d4c3a3;
+  width: 150px;
+}
+.add-table-input::placeholder {
+  color: #8a7a60;
+}
+
+.add-table-confirm, .add-table-cancel {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 2px solid #4a3c28;
+  color: #e6d5b3;
+  font-weight: bold;
+}
+
+.add-table-confirm {
+  background-color: #3e6b3e;
+}
+.add-table-confirm:hover {
+  background-color: #5a8e5a;
+}
+
+.add-table-cancel {
+  background-color: #8b3a3a;
+}
+.add-table-cancel:hover {
+  background-color: #a95a5a;
+}
+
+.no-tables-message {
+  padding: 40px;
+  text-align: center;
+  color: #a89a80;
+}
+.no-tables-message h2 {
+  font-family: 'Cinzel', serif;
+  color: #d4c3a3;
+}
+
+.loading-screen {
+  color: #F0E68C;
+  text-align: center;
+  padding-top: 50px;
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+}
+
+/* RaidMemberTable Styles */
+.table-container {
+  overflow-x: auto;
+  border: 2px solid #4a3c28;
+  border-radius: 6px;
+  background-color: #1a150f;
+  box-shadow: inset 0 0 10px #000;
+}
+
+.raid-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #d4c3a3;
+}
+
+.raid-table th, .raid-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #3b2f1f;
+}
+
+.raid-table th {
+  font-family: 'Cinzel', serif;
+  background-color: #211a11;
+  color: #F0E68C;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.raid-table tbody tr {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.raid-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.raid-table tbody tr:hover {
+  background-color: rgba(240, 230, 140, 0.08);
+}
+
+.raid-table tbody tr.drag-over {
+  background-color: rgba(240, 230, 140, 0.15);
+}
+
+.raid-table tbody tr.dragging {
+  opacity: 0.5;
+  background-color: #4a3c28;
+}
+
+.status-cell {
+  cursor: pointer;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: bold;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.status-present {
+  background-color: #28a745;
+}
+
+.status-absent {
+  background-color: #dc3545;
+}
+
+.status-missing {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.actions-cell {
+  text-align: right;
+}
+
+.action-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #4a3c28;
+  border-radius: 4px;
+  color: #d4c3a3;
+  margin-left: 8px;
+  padding: 5px;
+  line-height: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+.action-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  border-color: #6c5833;
+}
+
+.action-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sk-button:hover:enabled {
+  color: #87CEEB; /* Sky Blue */
+}
+
+.delete-button:hover {
+  color: #ff8f8f; /* Light Red */
+}
+
+/* AddMemberDialog Styles */
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.dialog-box {
+  background: #1a150f;
+  border: 2px solid #4a3c28;
+  border-radius: 8px;
+  padding: 32px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.9);
+}
+
+.dialog-title {
+  font-family: 'Cinzel', serif;
+  color: #F0E68C;
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  color: #a89a80;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  border: 2px solid #4a3c28;
+  background-color: #100c08;
+  color: #d4c3a3;
+  font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #8c7853;
+  box-shadow: 0 0 10px #8c7853;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.dialog-button {
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  padding: 12px 20px;
+  border: 2px solid #4a3c28;
+  border-radius: 4px;
+  text-shadow: 1px 1px 2px #000;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  transition: all 0.2s ease-in-out;
+}
+
+.dialog-button.submit {
+  background: linear-gradient(to bottom, #5a8e5a, #3e6b3e);
+  color: #e6f3e6;
+}
+.dialog-button.submit:hover {
+  background: linear-gradient(to bottom, #6fb36f, #5a8e5a);
+  border-color: #6c5833;
+  color: #fff;
+}
+
+.dialog-button.cancel {
+  background: linear-gradient(to bottom, #8b3a3a, #6e2e2e);
+  color: #f3e6e6;
+}
+.dialog-button.cancel:hover {
+  background: linear-gradient(to bottom, #a95a5a, #8b3a3a);
+  border-color: #6c5833;
+  color: #fff;
 }

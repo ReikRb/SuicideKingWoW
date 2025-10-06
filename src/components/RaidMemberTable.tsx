@@ -90,126 +90,85 @@ export function RaidMemberTable({ members, onUpdateMembers, onDeleteMember }: Ra
 
   const handleDelete = (memberId: string) => {
     // This now calls the global delete function
-    onDeleteMember(memberId);
+    if (window.confirm('Are you sure you want to permanently delete this player from all tables?')) {
+      onDeleteMember(memberId);
+    }
   };
 
   return (
-    <table style={styles.table}>
-      <thead>
-        <tr>
-          <th style={styles.th}>Order</th>
-          <th style={styles.th}>Name</th>
-          <th style={styles.th}>Class</th>
-          <th style={styles.th}>Status</th>
-          <th style={styles.th}>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {members.map((member) => (
-          <tr
-            key={member.id}
-            draggable
-            onDragStart={() => handleDragStart(member)}
-            onDragOver={(e) => {
-              handleDragOver(e);
-              setDragOverId(member.id);
-            }}
-            onDragLeave={() => setDragOverId(null)}
-            onDragEnd={() => {
-              setDraggedMember(null);
-              setDragOverId(null);
-            }}
-            onDrop={() => handleDrop(member)}
-            style={{
-              ...styles.tr,
-              backgroundColor: dragOverId === member.id ? '#2a2a2a' : undefined,
-              opacity: draggedMember?.id === member.id ? 0.5 : 1,
-            }}
-          >
-            <td style={styles.td}>{member.order}</td>
-            <td style={styles.td}>{member.name}</td>
-            <td style={{ ...styles.td, color: classColors[member.class] }}>
-              {member.class}
-            </td>
-            <td 
-              style={{ ...styles.td, cursor: 'pointer' }}
-              onClick={() => toggleStatus(member.id)}
-              data-clickable="true"
-            >
-              <span style={{
-                ...styles.status,
-                backgroundColor: member.status === 'present' ? '#4CAF50' :
-                                member.status === 'absent' ? '#f44336' : '#FF9800'
-              }}>
-                {member.status}
-              </span>
-            </td>
-            <td style={styles.td}>
-              <button onClick={() => handleDelete(member.id)} style={styles.actionButton}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                  <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                </svg>
-              </button>
-              <button onClick={() => handleSuicideKing(member.id)} style={styles.actionButton}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-                  <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-                </svg>
-              </button>
-            </td>
+    <div className="table-container">
+      <table className="raid-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Class</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {members.map((member) => (
+            <tr
+              key={member.id}
+              draggable
+              onDragStart={() => handleDragStart(member)}
+              onDragOver={(e) => {
+                handleDragOver(e);
+                setDragOverId(member.id);
+              }}
+              onDragLeave={() => setDragOverId(null)}
+              onDragEnd={() => {
+                setDraggedMember(null);
+                setDragOverId(null);
+              }}
+              onDrop={() => handleDrop(member)}
+              className={`
+                ${dragOverId === member.id ? 'drag-over' : ''}
+                ${draggedMember?.id === member.id ? 'dragging' : ''}
+              `}
+            >
+              <td>{member.order}</td>
+              <td style={{ color: classColors[member.class] }}>
+                {member.name}
+              </td>
+              <td style={{ color: classColors[member.class] }}>
+                {member.class}
+              </td>
+              <td
+                className="status-cell"
+                onClick={() => toggleStatus(member.id)}
+              >
+                <span className={`status-badge status-${member.status}`}>
+                  {member.status}
+                </span>
+              </td>
+              <td className="actions-cell">
+                <button
+                  className="action-button sk-button"
+                  onClick={() => handleSuicideKing(member.id)}
+                  title="Suicide King"
+                  disabled={member.status !== 'present'}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+                  </svg>
+                </button>
+                <button
+                  className="action-button delete-button"
+                  onClick={() => handleDelete(member.id)}
+                  title="Delete Member"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                    <path fillRule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                  </svg>
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
-
-const styles = {
-  table: {
-    width: '100%',
-    borderCollapse: 'collapse' as const,
-    backgroundColor: '#1a1a1a',
-    color: 'white',
-    borderRadius: '8px',
-    overflow: 'hidden',
-    border: '1px solid #444',
-  },
-  th: {
-    padding: '12px',
-    textAlign: 'left' as const,
-    backgroundColor: '#333',
-    borderBottom: '2px solid #444',
-    fontWeight: 'normal',
-    fontSize: '0.9em',
-    color: '#aaa',
-  },
-  td: {
-    padding: '12px',
-    borderBottom: '1px solid #444',
-    transition: 'background-color 0.2s',
-  },
-  tr: {
-    cursor: 'move',
-    transition: 'all 0.2s',
-  },
-  status: {
-    padding: '4px 8px',
-    borderRadius: '4px',
-    cursor: 'pointer',
-    fontSize: '0.9em',
-    display: 'inline-block',
-    minWidth: '60px',
-    textAlign: 'center' as const,
-    transition: 'all 0.2s',
-    '&:hover': {
-      filter: 'brightness(1.1)',
-    },
-  },
-  actionButton: {
-    background: 'none',
-    border: 'none',
-    color: 'white',
-    cursor: 'pointer',
-    padding: '4px',
-  }
-};
