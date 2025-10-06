@@ -37,7 +37,7 @@ export interface Player {
 
 export interface RaidMember {
   id: string; // This is the Player's ID
-  status: 'present' | 'absent' | 'missing';
+  status: 'present' | 'absent';
   order: number;
 }
 

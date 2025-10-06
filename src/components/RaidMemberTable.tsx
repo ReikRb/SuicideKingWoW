@@ -44,7 +44,7 @@ export function RaidMemberTable({ members, onUpdateMembers, onDeleteMember }: Ra
   const toggleStatus = (memberId: string) => {
     const newMembers = members.map(member => {
       if (member.id === memberId) {
-        const statusOrder = ['present', 'absent', 'missing'] as const;
+        const statusOrder = ['present', 'absent'] as const;
         const currentIndex = statusOrder.indexOf(member.status);
         const nextIndex = (currentIndex + 1) % statusOrder.length;
         return { ...member, status: statusOrder[nextIndex] };
