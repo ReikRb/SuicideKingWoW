@@ -4,7 +4,7 @@ import { AddMemberDialog } from './components/AddMemberDialog';
 import { RaidMemberTable } from './components/RaidMemberTable';
 import type { EnrichedRaidMember, Player, RaidMember, RaidTable, WowClass } from './types/wowTypes';
 import { db } from './firebase';
-import { collection, getDocs, writeBatch, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, writeBatch, doc, deleteDoc } from 'firebase/firestore';
 
 function App() {
   const [players, setPlayers] = useState<Player[]>([]);
