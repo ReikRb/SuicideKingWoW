@@ -299,6 +299,11 @@ function App() {
         onClose={() => setIsAddDialogOpen(false)}
         onAdd={handleAddMember}
       />
+  
+      <div className="footer">
+        <p>Developed by ReikRb</p>
+        
+      </div>
     </div>
   );
 }
